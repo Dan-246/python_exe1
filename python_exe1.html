@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>インタラクティブPython演習</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <style>
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; /* Tailwind gray-300 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; /* Tailwind gray-400 */
+        }
+        .content-section h2 {
+            font-size: 1.75rem; /* Tailwind text-2xl approx */
+            font-weight: 600; /* Tailwind semibold */
+            margin-bottom: 1rem;
+            color: #1e293b; /* Tailwind slate-800 */
+        }
+        .content-section h3 {
+            font-size: 1.25rem; /* Tailwind text-xl approx */
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #334155; /* Tailwind slate-700 */
+        }
+        .content-section p, .content-section ul, .content-section ol {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .content-section ul, .content-section ol {
+            padding-left: 1.5rem;
+        }
+        .content-section li {
+            margin-bottom: 0.5rem;
+        }
+        .content-section pre {
+            background-color: #f3f4f6; /* Tailwind gray-100 */
+            border: 1px solid #e5e7eb; /* Tailwind gray-200 */
+            padding: 1rem;
+            border-radius: 0.375rem; /* Tailwind rounded-md */
+            overflow-x: auto;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            position: relative; /* For copy button positioning */
+        }
+        .content-section code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+        .content-section .hint-box {
+            background-color: #ffedd5; /* Tailwind orange-100 */
+            border-left: 4px solid #fb923c; /* Tailwind orange-400 */
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            border-radius: 0.25rem; /* Tailwind rounded-sm */
+        }
+        .nav-link {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            cursor: pointer;
+            margin-bottom: 0.25rem;
+        }
+        .nav-link:hover {
+            background-color: #e0f2fe; /* Tailwind sky-100 */
+            color: #0ea5e9; /* Tailwind sky-500 */
+        }
+        .nav-link.active {
+            background-color: #0ea5e9; /* Tailwind sky-500 */
+            color: white;
+            font-weight: 500; /* Tailwind medium */
+        }
+        .nav-group-title {
+            margin-top: 0.75rem;
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #475569; /* Tailwind slate-600 */
+            padding: 0 0.75rem;
+        }
+        .nav-sub-link {
+            padding-left: 1.5rem; /* Indent sub-links */
+        }
+        .toggle-hint-button {
+            background-color: #f97316; /* Tailwind orange-500 */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+            font-size: 0.875rem;
+        }
+        .toggle-hint-button:hover {
+            background-color: #ea580c; /* Tailwind orange-600 */
+        }
+        /* New styles for improved UI */
+        .objective-box {
+            background-color: #fef3c7; /* Tailwind amber-100 */
+            border-left: 4px solid #f59e0b; /* Tailwind amber-500 */
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.375rem;
+        }
+        .objective-box strong {
+            color: #b45309; /* Tailwind amber-700 */
+            font-size: 1.125rem; /* Tailwind text-lg */
+        }
+        .step-list-item {
+            background-color: #f8fafc; /* Tailwind slate-50 */
+            border: 1px solid #e2e8f0; /* Tailwind slate-200 */
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 0.375rem;
+            display: flex;
+            align-items: flex-start;
+        }
+        .step-number {
+            background-color: #0ea5e9; /* Tailwind sky-500 */
+            color: white;
+            font-weight: 700; /* Tailwind bold */
+            border-radius: 9999px; /* Tailwind rounded-full */
+            width: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+        }
+        .example-output-label {
+            font-weight: 600; /* Tailwind semibold */
+            color: #334155; /* Tailwind slate-700 */
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block; /* Ensures it takes full width and new line */
+        }
+        .code-label {
+            font-weight: 600;
+            color: #334155;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .copy-button {
+            background-color: #64748b; /* Tailwind slate-500 */
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+            font-size: 0.75rem;
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+        .copy-button:hover {
+            background-color: #475569; /* Tailwind slate-600 */
+        }
+        .formula-box {
+            background-color: #ecfeff; /* Tailwind cyan-50 */
+            border: 1px solid #67e8f9; /* Tailwind cyan-300 */
+            padding: 1rem;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.375rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 1rem;
+            line-height: 1.8;
+            text-align: center; /* Center the formula */
+        }
+        .formula-box img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        .password-section {
+            background-color: #f0f9ff; /* Tailwind sky-50 */
+            border: 1px solid #bae6fd; /* Tailwind sky-200 */
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .password-section input {
+            padding: 0.5rem 1rem;
+            border: 1px solid #cbd5e1; /* Tailwind slate-300 */
+            border-radius: 0.375rem;
+            margin-right: 0.5rem;
+            width: 180px;
+        }
+        .password-section button {
+            background-color: #0ea5e9; /* Tailwind sky-500 */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+        }
+        .password-section button:hover {
+            background-color: #0284c7; /* Tailwind sky-600 */
+        }
+        .password-message {
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+        .password-message.error {
+            color: #dc2626; /* Tailwind red-600 */
+        }
+        .password-message.success {
+            color: #16a34a; /* Tailwind green-600 */
+        }
+    </style>
+</head>
+<body class="bg-stone-100 text-stone-800 font-sans">
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <nav id="sidebar" class="w-full md:w-72 bg-white p-5 shadow-lg overflow-y-auto">
+            <h1 class="text-2xl font-bold text-sky-600 mb-6">Python演習</h1>
+            <ul>
+                <li><a href="#hajimeni" class="nav-link active" data-section="hajimeni">はじめに</a></li>
+                
+                <li class="nav-group-title">ウォーミングアップ</li>
+                <li><a href="#warmup-problem1" class="nav-link nav-sub-link" data-section="warmup-problem1">W.UP 1：計算の表示</a></li>
+                <li><a href="#warmup-problem2" class="nav-link nav-sub-link" data-section="warmup-problem2">W.UP 2：文字列と変数</a></li>
+                <li><a href="#warmup-problem3" class="nav-link nav-sub-link" data-section="warmup-problem3">W.UP 3：変数の更新</a></li>
+                <li><a href="#warmup-problem4" class="nav-link nav-sub-link" data-section="warmup-problem4">W.UP 4：誕生日、何曜日？</a></li>
+
+                <li class="nav-group-title">第1部：基本の確認と応用</li>
+                <li><a href="#part1-problem1" class="nav-link nav-sub-link" data-section="part1-problem1">問題1：自己紹介メーカー</a></li>
+                <li><a href="#part1-problem2" class="nav-link nav-sub-link" data-section="part1-problem2">問題2：お菓子のお買い物計算機</a></li>
+                <li><a href="#part1-problem3" class="nav-link nav-sub-link" data-section="part1-problem3">問題3：学力判定チェック</a></li>
+                <li><a href="#part1-problem4" class="nav-link nav-sub-link" data-section="part1-problem4">問題4：単位変換マシーン</a></li>
+                
+                <li class="nav-group-title">第2部：自由に挑戦！</li>
+                <li><a href="#part2-challenge" class="nav-link nav-sub-link" data-section="part2-challenge">自由制作 or 挑戦課題</a></li>
+                
+                <li><a href="#matome" class="nav-link mt-4" data-section="matome">まとめと振り返り</a></li>
+            </ul>
+        </nav>
+
+        <main id="main-content" class="flex-1 p-6 md:p-10 overflow-y-auto">
+            <div id="password-protection-section" class="password-section">
+                <p class="mb-4 text-slate-700">コード例を見るにはパスワードを入力してください。</p>
+                <input type="password" id="password-input" placeholder="パスワードを入力">
+                <button id="password-submit-button">コード例を表示</button>
+                <div id="password-message" class="password-message hidden"></div>
+            </div>
+
+            <section id="section-hajimeni" class="content-section">
+                <h2>はじめに</h2>
+                <p class="mb-4">このインタラクティブな演習ページへようこそ！ここでは、Pythonプログラミングの基礎を学び、練習するための課題が用意されています。左側のナビゲーションメニューを使って、各セクションや問題に進んでください。</p>
+                <p>前回のPythonの授業はどうでしたか？今日は、前回の授業で習ったことを使って、たくさんの問題に挑戦して、もっとPythonに詳しくなろう！</p>
+                <p class="mb-4 text-sm text-slate-600">
+                    ※ この演習では、Pythonのコードをファイルに書いて実行する形式（ファイル実行）で行います。
+                    `input()`関数を使う問題では、プログラムを実行するとターミナルに質問が表示されますので、キーボードで入力してください。
+                </p>
+                
+                <h3>前回の復習ポイントを確認しよう！</h3>
+                <ul class="list-disc ml-5">
+                    <li class="step-list-item"><span class="step-number">1</span><div><strong>変数</strong>って何だったかな？情報をしまっておく箱だね。</div></li>
+                    <li class="step-list-item"><span class="step-number">2</span><div><strong>データ型</strong>（`int`、`str`、`float`）ってどんな種類があった？整数、文字、小数点のある数だったね。</div></li>
+                    <li class="step-list-item"><span class="step-number">3</span><div><strong>print()</strong> で何ができた？画面に文字を表示できたね。</div></li>
+                    <li class="step-list-item"><span class="step-number">4</span><div><strong>int()</strong> や <strong>str()</strong> はいつ使う？データの種類を変えるときに使うんだったね。</div></li>
+                    <li class="step-list-item"><span class="step-number">5</span><div><strong>四則演算</strong>（`+`, `-`, `*`, `/`）や、<strong>比較演算子</strong>（`&gt;`, `&lt;`, `==` など）の使い方を覚えているかな？</div></li>
+                    <li class="step-list-item"><span class="step-number">6</span><div><strong>論理演算子</strong>（`and`, `or`）で、複数の条件を組み合わせることもできたね。</div></li>
+                </ul>
+
+                <h3>今日の流れ</h3>
+                <ol class="list-decimal ml-5">
+                    <li class="step-list-item"><span class="step-number">1</span><div>まずは基本をしっかり復習する問題からスタートするよ！</div></li>
+                    <li class="step-list-item"><span class="step-number">2</span><div>次に、ちょっと頭を使う応用問題に挑戦してみよう！</div></li>
+                    <li class="step-list-item"><span class="step-number">3</span><div>最後は、自分で考えてプログラムを作る時間も用意しているからね。</div></li>
+                    <li class="step-list-item"><span class="step-number">4</span><div>困った時は、いつでも先生に質問してね！</div></li>
+                </ol>
+            </section>
+
+            <section id="section-warmup-problem1" class="content-section hidden">
+                <h2>ウォーミングアップ1：計算の表示</h2>
+                <p class="text-sm text-gray-600 mb-4">目標時間：5分</p>
+                <div class="objective-box">
+                    <strong>目標:</strong> Pythonで簡単な計算を行い、その結果を直接ターミナルに表示しよう。
+                </div>
+                <p>Pythonを使って、以下の計算結果をターミナルに表示するプログラムを書いてみましょう。</p>
+                <ol class="list-decimal ml-5">
+                    <li class="step-list-item"><span class="step-number">1</span><div>`2の15乗` の答えを表示してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">2</span><div>`123456 ÷ 7` の**商**（割り算の結果の整数部分）を表示してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">3</span><div>`123456 ÷ 7` の**余り**を表示してください。</div></li>
+                </ol>
+                <span class="code-label">コード例:</span>
+                <pre class="code-example-block hidden"><button class="copy-button" onclick="copyCode(this)">コードをコピー</button><code># 2の15乗
+print(2**15)
+
+# 123456 ÷ 7 の商
+print(123456 // 7)
+
+# 123456 ÷ 7 の余り
+print(123456 % 7)</code></pre>
+            </section>
+
+            <section id="section-warmup-problem2" class="content-section hidden">
+                <h2>ウォーミングアップ2：文字列と変数</h2>
+                <p class="text-sm text-gray-600 mb-4">目標時間：5分</p>
+                <div class="objective-box">
+                    <strong>目標:</strong> 文字列の表示と、変数を使った簡単な情報の格納と表示を体験しよう。
+                </div>
+                <p>以下の指示に従って、Pythonのプログラムを書いてみましょう。</p>
+                <ol class="list-decimal ml-5">
+                    <li class="step-list-item"><span class="step-number">1</span><div>「本日はお日柄もよく」という文章をそのままターミナルに表示してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">2</span><div>変数 `x` に数字の `1203` を代入し、その変数 `x` の中身をターミナルに表示してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">3</span><div>変数 `a` に `2` を、変数 `b` に `4` をそれぞれ代入し、`a` と `b` の**和**（足し算の結果）をターミナルに表示してください。</div></li>
+                </ol>
+                <span class="code-label">コード例:</span>
+                <pre class="code-example-block hidden"><button class="copy-button" onclick="copyCode(this)">コードをコピー</button><code># 「本日はお日柄もよく」と表示
+print("本日はお日柄もよく")
+
+# 変数xに1203を代入し、表示
+x = 1203
+print(x)
+
+# 変数aとbの和を表示
+a = 2
+b = 4
+print(a + b)</code></pre>
+            </section>
+
+            <section id="section-warmup-problem3" class="content-section hidden">
+                <h2>ウォーミングアップ3：変数の更新</h2>
+                <p class="text-sm text-gray-600 mb-4">目標時間：5分</p>
+                <div class="objective-box">
+                    <strong>目標:</strong> 変数に新しい値を代入して、中身を更新する操作を理解しよう。
+                </div>
+                <p>以下の指示に従って、Pythonのプログラムを書いてみましょう。</p>
+                <ol class="list-decimal ml-5">
+                    <li class="step-list-item"><span class="step-number">1</span><div>変数 `c` に `1000` を代入してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">2</span><div>変数 `c` の値から `345` を引いた数を、再度変数 `c` に代入してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">3</span><div>更新された変数 `c` の中身をターミナルに表示してください。</div></li>
+                </ol>
+                <span class="code-label">コード例:</span>
+                <pre class="code-example-block hidden"><button class="copy-button" onclick="copyCode(this)">コードをコピー</button><code># 変数cに1000を代入
+c = 1000
+print("最初のc:", c)
+
+# cの値から345を引いた数を再代入
+c = c - 345
+print("更新後のc:", c)</code></pre>
+            </section>
+
+            <section id="section-warmup-problem4" class="content-section hidden">
+                <h2>ウォーミングアップ4：誕生日、何曜日？</h2>
+                <p class="text-sm text-gray-600 mb-4">目標時間：10分</p>
+                <div class="objective-box">
+                    <strong>目標:</strong> 「ツェラーの公式」を使って、自分の誕生日が何曜日だったかを計算してみよう！`input()`関数を使って、自分で日付を入力するよ。
+                </div>
+                <p>皆さんの誕生日が何曜日だったか、気になりませんか？「ツェラーの公式」という数学の公式を使うと、どんな日付でも曜日を計算することができます。</p>
+                <p>この問題では、あなたが生まれた年、月、日をプログラムに入力し、ツェラーの公式を使って曜日を計算してみましょう！</p>
+
+                <h3>ツェラーの公式について</h3>
+                <p>ツェラーの公式は、日付の曜日を求めるための数学の公式です。見た目は複雑ですが、一つずつ計算すれば大丈夫！</p>
+                <div class="formula-box">
+                    <img src="birthday.jpg" alt="ツェラーの公式" onerror="this.onerror=null;this.src='https://placehold.co/600x120/E0F2FE/0284C7?text=ツェラーの公式';">
+                </div>
+                <p class="text-sm text-gray-600 mt-2">
+                    ※ 上の画像はツェラーの公式を表しています。
+                    この演習では、画像に示されている公式の記号を使って計算します。
+                    （MathJaxは埋め込んでいますが、この公式の表示には画像を使用しています。）
+                </p>
+                <p>なお、記号の意味は以下の通りです。</p>
+                <ul class="list-disc ml-5">
+                    <li class="step-list-item"><span class="step-number">h</span><div>計算結果が示す曜日です。この数字が何曜日になるか、下のリストで確認しましょう。
+                        <ul class="list-disc ml-5 mt-2">
+                            <li>**0:** 土曜日</li>
+                            <li>**1:** 日曜日</li>
+                            <li>**2:** 月曜日</li>
+                            <li>**3:** 火曜日</li>
+                            <li>**4:** 水曜日</li>
+                            <li>**5:** 木曜日</li>
+                            <li>**6:** 金曜日</li>
+                        </ul></div>
+                    </li>
+                    <li class="step-list-item"><span class="step-number">d</span><div>計算したい日付の**「日」**の数字です。（例：1日なら `1`、25日なら `25`）</div></li>
+                    <li class="step-list-item"><span class="step-number">m</span><div>計算したい日付の**「月」**の数字です。ただし、特別なルールがあります！
+                        <ul class="list-disc ml-5 mt-2">
+                            <li>**3月から12月:** そのままの数字を使います。（例: 3月は `3`、12月は `12`）</li>
+                            <li>**1月と2月:** それぞれ `13` と `14` として扱います。このとき、**年を1年前にして**計算します。（例: 2000年1月なら、年を1999年、月を13として計算します）</li>
+                        </ul>
+                    </div></li>
+                    <li class="step-list-item"><span class="step-number">Y</span><div>計算したい**「年」の下2桁**の数字です。（例：2023年なら `23`）Pythonでは `year % 100` で求められます。</div></li>
+                    <li class="step-list-item"><span class="step-number">y</span><div>計算したい**「年」全体**の数字です。（例：2023年なら `2023`）</div></li>
+                </ul>
+                <p>※ `⌊ x ⌋` は、「**xを超えない最大の整数**」を表します。つまり、`x` の小数点以下を**切り捨てる**という意味です。Pythonでは `//` （整数割り算）で表現できます。</p>
+
+                <h3>課題:</h3>
+                <ol class="list-decimal ml-5">
+                    <li class="step-list-item"><span class="step-number">1</span><div>`input()`関数を使って、あなたの**生まれた年（西暦）**、**月**、**日**をそれぞれ入力し、変数に代入してください。プログラムを実行するとターミナルに質問が表示されますので、キーボードで入力してください。`input()`で受け取ったものは**文字列**なので、`int()`を使って**整数**に変換するのを忘れないでください。</div></li>
+                    <li class="step-list-item"><span class="step-number">2</span><div>もし入力された月が1月（`1`）または2月（`2`）の場合は、ツェラーの公式のルールに合わせて、**月を12増やし**（`month + 12`）、**年を1年前にする**（`year - 1`）処理を行ってください。</div></li>
+                    <li class="step-list-item"><span class="step-number">3</span><div>計算に必要な `d`, `m`, `Y`, `y` の各値を、上で説明したルールに従って変数に代入してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">4</span><div>ツェラーの公式の計算式をPythonで記述し、結果を `h` という変数に代入してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">5</span><div>`h` の値（0〜6）に対応する曜日をターミナルに表示してください。</div></li>
+                </ol>
+                <span class="example-output-label">表示例（例：2000年1月1日を入力した場合）:</span>
+                <pre><code>生まれた年（西暦）を入力してください: 2000
+生まれた月を入力してください: 1
+生まれた日を入力してください: 1
+あなたの誕生日は土曜日でした！</code></pre>
+                <span class="code-label">コード例:</span>
+                <pre class="code-example-block hidden"><button class="copy-button" onclick="copyCode(this)">コードをコピー</button><code># 1. 生まれた年、月、日を入力
+year = int(input("生まれた年（西暦）を入力してください: "))
+month = int(input("生まれた月を入力してください: "))
+day = int(input("生まれた日を入力してください: "))
+
+# 2. 1月、2月の特別な処理
+# 月が1月または2月の場合、月を+12して、年を-1する
+if month &lt;= 2:
+    month += 12
+    year -= 1
+
+# 3. ツェラーの公式に必要な各値を準備
+d = day          # 日
+m = month        # 月（調整済み）
+Y = year % 100   # 年の下2桁
+y = year         # 年全体
+
+# 4. ツェラーの公式を計算
+# h = (d + 小数点以下切り捨て(26*(m+1)/10) + Y + 小数点以下切り捨て(Y/4) - 2*小数点以下切り捨て(y/100) + 小数点以下切り捨て(y/400)) を7で割った余り
+h = (d + (26 * (m + 1)) // 10 + Y + Y // 4 - 2 * (y // 100) + y // 400) % 7
+
+# 5. 結果の表示
+days_of_week = ["土曜日", "日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日"]
+print("あなたの誕生日は" + days_of_week[h] + "でした！")</code></pre>
+            </section>
+
+            <section id="section-part1-problem1" class="content-section hidden">
+                <h2>問題1：自己紹介メーカー</h2>
+                <p class="text-sm text-gray-600 mb-4">目標時間：15分</p>
+                <div class="objective-box">
+                    <strong>目標:</strong> 変数に情報を入れて、文字列を組み合わせて自己紹介文を表示しよう。
+                </div>
+                <p>あなたの情報を変数に入れて、自己紹介のプログラムを完成させましょう。</p>
+                <ol class="list-decimal ml-5">
+                    <li class="step-list-item"><span class="step-number">1</span><div>以下の情報を変数に代入してください。
+                        <ul class="list-disc ml-5 mt-2">
+                            <li>`my_name` という変数にあなたの名前（例: `"山田太郎"`）を代入。</li>
+                            <li>`my_age` という変数にあなたの年齢（例: `13`）を代入。</li>
+                            <li>`my_favorite_color` という変数にあなたの好きな色（例: `"青"`）を代入。</li>
+                            <li>`my_height_cm` という変数にあなたの身長（例: `155.5`）を代入。</li>
+                        </ul></div>
+                    </li>
+                    <li class="step-list-item"><span class="step-number">2</span><div>`print()` を使って、以下のような自己紹介文がターミナルに表示されるようにプログラムを書いてみましょう。年齢や身長の数字は、必ず `str()` を使って文字列に変換してから、他の文字とつなげて表示してください。</div></li>
+                </ol>
+                <span class="example-output-label">表示例:</span>
+                <pre><code>こんにちは！私の名前は山田太郎です。
+年齢は13歳で、好きな色は青です。
+身長は155.5cmだよ！</code></pre>
+                <span class="code-label">コード例:</span>
+                <pre class="code-example-block hidden"><button class="copy-button" onclick="copyCode(this)">コードをコピー</button><code>my_name = "山田太郎"
+my_age = 13
+my_favorite_color = "青"
+my_height_cm = 155.5
+
+print("こんにちは！私の名前は" + my_name + "です。")
+print("年齢は" + str(my_age) + "歳で、好きな色は" + my_favorite_color + "です。")
+print("身長は" + str(my_height_cm) + "cmだよ！")</code></pre>
+            </section>
+
+            <section id="section-part1-problem2" class="content-section hidden">
+                <h2>問題2：お菓子のお買い物計算機</h2>
+                <p class="text-sm text-gray-600 mb-4">目標時間：15分</p>
+                <div class="objective-box">
+                    <strong>目標:</strong> 変数や数字を使って、お買い物の合計金額と残金を計算して表示しよう。
+                </div>
+                <p>お菓子をいくつか買いました。持っているお金から、お買い物の合計金額と残金を計算するプログラムを作りましょう。</p>
+                <ol class="list-decimal ml-5">
+                    <li class="step-list-item"><span class="step-number">1</span><div>以下の情報を変数に代入してください。
+                        <ul class="list-disc ml-5 mt-2">
+                            <li>`money` という変数に、持っているお金の金額（例: `500`）を代入。</li>
+                            <li>`chocolate_price` という変数に、チョコレート1個の値段（例: `120`）を代入。</li>
+                            <li>`juice_price` という変数に、ジュース1本の値段（例: `150`）を代入。</li>
+                            <li>`chocolate_count` という変数に、チョコレートを買った個数（例: `2`）を代入。</li>
+                            <li>`juice_count` という変数に、ジュースを買った本数（例: `1`）を代入。</li>
+                        </ul></div>
+                    </li>
+                    <li class="step-list-item"><span class="step-number">2</span><div>チョコレートの合計金額とジュースの合計金額をそれぞれ計算し、変数に代入してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">3</span><div>全てのお買い物の合計金額を計算し、`total_price` という変数に代入してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">4</span><div>残金を計算し、`remaining_money` という変数に代入してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">5</span><div>`print()` を使って、以下のようにターミナルに表示されるようにプログラムを書いてみましょう。</div></li>
+                </ol>
+                <span class="example-output-label">表示例:</span>
+                <pre><code>持っているお金は500円です。
+チョコレートを2個買いました。
+ジュースを1本買いました。
+合計金額は390円です。
+残金は110円です。</code></pre>
+                <button class="toggle-hint-button mt-2 mb-2" data-hint-target="hint-problem2">ヒントを見る/隠す</button>
+                <div id="hint-problem2" class="hint-box hidden">
+                    <p><strong>ヒント:</strong> 掛け算（`*`）や引き算（`-`）を使ってみよう！数字と文字をつなげる時は、`str()` を使うことを忘れないでね。</p>
+                </div>
+                <span class="code-label">コード例:</span>
+                <pre class="code-example-block hidden"><button class="copy-button" onclick="copyCode(this)">コードをコピー</button><code>money = 500
+chocolate_price = 120
+juice_price = 150
+chocolate_count = 2
+juice_count = 1
+
+chocolate_total = chocolate_price * chocolate_count
+juice_total = juice_price * juice_count
+
+total_price = chocolate_total + juice_total
+remaining_money = money - total_price
+
+print("持っているお金は" + str(money) + "円です。")
+print("チョコレートを" + str(chocolate_count) + "個買いました。")
+print("ジュースを" + str(juice_count) + "本買いました。")
+print("合計金額は" + str(total_price) + "円です。")
+print("残金は" + str(remaining_money) + "円です。")</code></pre>
+            </section>
+
+            <section id="section-part1-problem3" class="content-section hidden">
+                <h2>問題3：学力判定チェック</h2>
+                <p class="text-sm text-gray-600 mb-4">目標時間：15分</p>
+                <div class="objective-box">
+                    <strong>目標:</strong> 比較演算子と論理演算子（`and`, `or`）を使って、いくつかの条件が正しいかどうか（`True` か `False`）を確認して表示しよう。
+                </div>
+                <p>テストの点数から、学力の状況をチェックするプログラムです。特定の条件が満たされているかどうかを `True`（正しい）か `False`（間違っている）で確認してみましょう。</p>
+                <ol class="list-decimal ml-5">
+                    <li class="step-list-item"><span class="step-number">1</span><div>以下の情報を変数に代入してください。（あなたの好きな点数を入れてみよう）
+                        <ul class="list-disc ml-5 mt-2">
+                            <li>`japanese_score` という変数に国語の点数（整数）を代入。</li>
+                            <li>`math_score` という変数に算数の点数（整数）を代入。</li>
+                            <li>`science_score` という変数に理科の点数（整数）を代入。</li>
+                        </ul></div>
+                    </li>
+                    <li class="step-list-item"><span class="step-number">2</span><div>比較演算子（`&gt;`, `&lt;`, `==`, `&gt;=`, `&lt;=`）と論理演算子（`and`, `or`）を使って、以下の条件が正しいかどうかを `print()` で直接ターミナルに表示してみましょう。（`True` か `False` が表示されます。）
+                        <ul class="list-disc ml-5 mt-2">
+                            <li><strong>判定A:</strong> 国語の点数が80点以上 かつ 算数の点数が70点以上である。</li>
+                            <li><strong>判定B:</strong> 理科の点数が60点未満 または 国語の点数が50点未満である。</li>
+                            <li><strong>判定C:</strong> 算数の点数が100点である。</li>
+                            <li><strong>判定D:</strong> （応用）理科の点数が70点以上 かつ （国語の点数が80点以上 または 算数の点数が80点以上）である。</li>
+                        </ul></div>
+                    </li>
+                </ol>
+                <button class="toggle-hint-button mt-2 mb-2" data-hint-target="hint-problem3">ヒントを見る/隠す</button>
+                <div id="hint-problem3" class="hint-box hidden">
+                     <p><strong>ヒント:</strong> `print()` の中に直接条件式を書いてみよう！例えば、`print(10 &gt; 5)` と書くと `True` が表示されるよ。</p>
+                </div>
+                <span class="example-output-label">判定Aのコード例:</span>
+                <pre><code># print(japanese_score &gt;= 80 and math_score &gt;= 70) のように書いてみよう</code></pre>
+                <span class="code-label">コード例:</span>
+                <pre class="code-example-block hidden"><button class="copy-button" onclick="copyCode(this)">コードをコピー</button><code>japanese_score = 85
+math_score = 72
+science_score = 65
+
+# 判定A
+print("判定A: 国語の点数が80点以上 かつ 算数の点数が70点以上であるか？")
+print(japanese_score >= 80 and math_score >= 70)
+
+# 判定B
+print("\n判定B: 理科の点数が60点未満 または 国語の点数が50点未満であるか？")
+print(science_score < 60 or japanese_score < 50)
+
+# 判定C
+print("\n判定C: 算数の点数が100点であるか？")
+print(math_score == 100)
+
+# 判定D (応用)
+print("\n判定D: 理科の点数が70点以上 かつ (国語の点数が80点以上 または 算数の点数が80点以上)であるか？")
+print(science_score >= 70 and (japanese_score >= 80 or math_score >= 80))</code></pre>
+            </section>
+
+            <section id="section-part1-problem4" class="content-section hidden">
+                <h2>問題4：単位変換マシーン</h2>
+                <p class="text-sm text-gray-600 mb-4">目標時間：15分</p>
+                <div class="objective-box">
+                    <strong>目標:</strong> 小数点を含む数（`float`）や整数（`int`）を使って、単位を変換して表示しよう。
+                </div>
+                <p>センチメートル（cm）をメートル（m）に、グラム（g）をキログラム（kg）に変換して表示するプログラムです。</p>
+                <ol class="list-decimal ml-5">
+                    <li class="step-list-item"><span class="step-number">1</span><div>`length_cm` という変数に、物体の長さ（例: `250.5` - 小数点を含む数値）をセンチメートルで代入してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">2</span><div>この長さをメートルに変換し、`length_m` という変数に代入してください。（1m = 100cm）</div></li>
+                    <li class="step-list-item"><span class="step-number">3</span><div>`weight_g` という変数に、物体の重さ（例: `1500` - 整数）をグラムで代入してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">4</span><div>この重さをキログラムに変換し、`weight_kg` という変数に代入してください。（1kg = 1000g）</div></li>
+                    <li class="step-list-item"><span class="step-number">5</span><div>`print()` を使って、以下のようにターミナルに表示されるようにプログラムを書いてみましょう。メートルは小数点を含むままで、キログラムは小数点以下を切り捨てて整数で表示してください。（例: 1.5kgではなく、1kgと表示）</div></li>
+                </ol>
+                <span class="example-output-label">表示例:</span>
+                <pre><code>250.5cmは2.505mです。
+1500gは1kgです。</code></pre>
+                <button class="toggle-hint-button mt-2 mb-2" data-hint-target="hint-problem4">ヒントを見る/隠す</button>
+                <div id="hint-problem4" class="hint-box hidden">
+                    <p><strong>ヒント:</strong> 掛け算（`*`）や引き算（`-`）を使ってみよう！数字と文字をつなげる時は、`str()` を使うことを忘れないでね。</p>
+                </div>
+                <span class="code-label">コード例:</span>
+                <pre class="code-example-block hidden"><button class="copy-button" onclick="copyCode(this)">コードをコピー</button><code>length_cm = 250.5
+length_m = length_cm / 100
+
+weight_g = 1500
+weight_kg = int(weight_g / 1000) # int() で小数点以下を切り捨て
+
+print(str(length_cm) + "cmは" + str(length_m) + "mです。")
+print(str(weight_g) + "gは" + str(weight_kg) + "kgです。")</code></pre>
+            </section>
+
+            <section id="section-part2-challenge" class="content-section hidden">
+                <h2>第2部：自由に挑戦！プログラミングタイム</h2>
+                <p class="text-sm text-gray-600 mb-4">目標時間：45分</p>
+                <div class="objective-box">
+                    <strong>目標:</strong> これまでの知識を組み合わせて、自分でプログラムを考えて作ってみよう！
+                </div>
+                <p>ここからは、これまで習ったことを使って、自分でオリジナルのプログラムを考えてみましょう。もしアイデアが浮かばない場合は、以下の「挑戦課題」に取り組んでみてください。</p>
+                
+                <h3>選択肢1：自由制作</h3>
+                <p>これまでの知識を活かして、何か面白いプログラムを作ってみよう。例えば、こんなアイデアはどうかな？</p>
+                <ul class="list-disc ml-5">
+                    <li class="step-list-item"><div><strong>今日の運勢占い:</strong> 好きな数字や名前から、今日の運勢（例: 大吉、中吉、小吉）を表示するプログラム。いくつかの運勢パターンを `print()` で直接表示するだけでもOKだよ。</div></li>
+                    <li class="step-list-item"><div><strong>オリジナル計算機:</strong> 好きな計算式や、複数の値を入力して結果を出すプログラム。</div></li>
+                    <li class="step-list-item"><div><strong>短い物語メーカー:</strong> 変数に登場人物や場所などを入れて、短い物語が完成するようにするプログラム。</div></li>
+                </ul>
+
+                <h3 class="mt-6">選択肢2：挑戦課題「ミニゲームのスコア計算」</h3>
+                <p>簡単なミニゲームのスコアを計算するプログラムです。</p>
+                <ol class="list-decimal ml-5">
+                    <li class="step-list-item"><span class="step-number">1</span><div>以下の変数を用意し、それぞれに好きな値を代入してください。
+                        <ul class="list-disc ml-5 mt-2">
+                            <li>`clear_stage_count`：クリアしたステージの数（整数）</li>
+                            <li>`item_get_count`：獲得したアイテムの数（整数）</li>
+                            <li>`time_bonus_sec`：残った時間のボーナス（秒数、整数）</li>
+                        </ul></div>
+                    </li>
+                    <li class="step-list-item"><span class="step-number">2</span><div>以下の計算式で、総合スコアを計算し、`total_score` という変数に代入してみましょう。
+                        <p class="mt-2"><strong>総合スコア</strong> = （クリアしたステージの数 × 100点） + （獲得したアイテムの数 × 10点） + （残った時間のボーナス × 5点）</p></div>
+                    </li>
+                    <li class="step-list-item"><span class="step-number">3</span><div>`print()` を使って、以下のようにターミナルに表示されるようにプログラムを書いてみましょう。</div></li>
+                </ol>
+                <span class="example-output-label">表示例:</span>
+                <pre><code>ゲームクリア！
+ステージクリア数: [クリアしたステージの数]
+アイテム獲得数: [獲得したアイテムの数]
+タイムボーナス: [残った時間のボーナス]秒
+あなたの総合スコアは [総合スコア]点 です！</code></pre>
+                <h4 class="mt-4 font-semibold text-slate-700">さらに挑戦！:</h4>
+                <p>この総合スコアが1000点以上になるような値を設定して、`print(総合スコア &gt;= 1000)` のように、その条件が`True`になることを確認して表示してみよう。</p>
+                <span class="code-label">コード例:</span>
+                <pre class="code-example-block hidden"><button class="copy-button" onclick="copyCode(this)">コードをコピー</button><code>clear_stage_count = 8
+item_get_count = 15
+time_bonus_sec = 30
+
+total_score = (clear_stage_count * 100) + (item_get_count * 10) + (time_bonus_sec * 5)
+
+print("ゲームクリア！")
+print("ステージクリア数: " + str(clear_stage_count))
+print("アイテム獲得数: " + str(item_get_count))
+print("タイムボーナス: " + str(time_bonus_sec) + "秒")
+print("あなたの総合スコアは " + str(total_score) + "点 です！")
+
+# さらに挑戦！
+print("\n総合スコアが1000点以上であるか？")
+print(total_score >= 1000)</code></pre>
+            </section>
+
+            <section id="section-matome" class="content-section hidden">
+                <h2>まとめと振り返り</h2>
+                <p class="text-sm text-gray-600 mb-4">目標時間：15分</p>
+                <ul class="list-disc ml-5">
+                    <li class="step-list-item"><div>今日作ったプログラムを発表してみよう！（希望者）</div></li>
+                    <li class="step-list-item"><div>難しかった問題や、新しく発見したことなどをみんなで共有しよう。</div></li>
+                    <li class="step-list-item"><div>もっと知りたいことや、次の授業で学びたいことなどがあれば、先生に教えてね！</div></li>
+                </ul>
+                <p class="mt-4">これで今日の演習は終わりです。よく頑張りました！Pythonプログラミングの楽しさを少しでも感じられたでしょうか？これからも色々なプログラム作りに挑戦してみてくださいね！</p>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+            const hintToggles = document.querySelectorAll('.toggle-hint-button');
+            const passwordInput = document.getElementById('password-input');
+            const passwordSubmitButton = document.getElementById('password-submit-button');
+            const passwordMessage = document.getElementById('password-message');
+            const passwordProtectionSection = document.getElementById('password-protection-section');
+            const codeExampleBlocks = document.querySelectorAll('.code-example-block');
+
+            const CORRECT_PASSWORD = '12345_!';
+
+            function setActiveSection(sectionId) {
+                contentSections.forEach(section => {
+                    if (section.id === `section-${sectionId}`) {
+                        section.classList.remove('hidden');
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    if (link.dataset.section === sectionId) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+                // Scroll main content to top
+                document.getElementById('main-content').scrollTop = 0;
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const sectionId = link.dataset.section;
+                    setActiveSection(sectionId);
+                    // Update URL hash for better navigation history, without page jump
+                    if(history.pushState) {
+                        history.pushState(null, null, `#${sectionId}`);
+                    } else {
+                        location.hash = `#${sectionId}`;
+                    }
+                });
+            });
+            
+            hintToggles.forEach(button => {
+                button.addEventListener('click', () => {
+                    const hintTargetId = button.dataset.hintTarget;
+                    const hintBox = document.getElementById(hintTargetId);
+                    if (hintBox) {
+                        hintBox.classList.toggle('hidden');
+                    }
+                });
+            });
+
+            // Password protection logic
+            passwordSubmitButton.addEventListener('click', () => {
+                const enteredPassword = passwordInput.value;
+                passwordMessage.classList.remove('hidden', 'error', 'success');
+                if (enteredPassword === CORRECT_PASSWORD) {
+                    codeExampleBlocks.forEach(block => {
+                        block.classList.remove('hidden');
+                    });
+                    passwordProtectionSection.classList.add('hidden');
+                    passwordMessage.textContent = 'コード例を表示しました！';
+                    passwordMessage.classList.add('success');
+                } else {
+                    passwordMessage.textContent = 'パスワードが違います。';
+                    passwordMessage.classList.add('error');
+                }
+            });
+
+            // Function to copy code to clipboard
+            function copyCode(button) {
+                const preElement = button.closest('pre');
+                const codeElement = preElement.querySelector('code');
+                if (codeElement) {
+                    const codeText = codeElement.innerText;
+                    // Use document.execCommand('copy') as navigator.clipboard.writeText() may not work due to iFrame restrictions.
+                    const textarea = document.createElement('textarea');
+                    textarea.value = codeText;
+                    textarea.style.position = 'fixed'; // Avoid scrolling to bottom
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        button.textContent = 'コピーしました！';
+                    } catch (err) {
+                        console.error('Failed to copy code: ', err);
+                        button.textContent = 'コピー失敗';
+                    }
+                    setTimeout(() => {
+                        button.textContent = 'コードをコピー';
+                        document.body.removeChild(textarea);
+                    }, 2000);
+                }
+            }
+            // Expose copyCode to global scope for onclick attribute
+            window.copyCode = copyCode;
+
+            // Initial section load based on URL hash or default
+            let initialSection = 'hajimeni';
+            if (window.location.hash) {
+                const hashSection = window.location.hash.substring(1);
+                // Check if a section exists for this hash
+                if (document.getElementById(`section-${hashSection}`)){
+                    initialSection = hashSection;
+                }
+            }
+            setActiveSection(initialSection);
+
+            // Handle browser back/forward navigation
+            window.addEventListener('popstate', () => {
+                 let hashSection = 'hajimeni';
+                 if (window.location.hash){
+                     const currentHash = window.location.hash.substring(1);
+                     if (document.getElementById(`section-${currentHash}`)){
+                         hashSection = currentHash;
+                     }
+                 }
+                 setActiveSection(hashSection);
+            });
+        });
+    </script>
+</body>
+</html>
