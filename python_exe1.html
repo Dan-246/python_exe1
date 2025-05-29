@@ -229,6 +229,10 @@
         .password-message.success {
             color: #16a34a; /* Tailwind green-600 */
         }
+        /* Explicitly apply font-weight bold to strong tags */
+        strong {
+            font-weight: 700; /* This ensures bolding for **text** */
+        }
     </style>
 </head>
 <body class="bg-stone-100 text-stone-800 font-sans">
@@ -242,13 +246,14 @@
                 <li><a href="#warmup-problem1" class="nav-link nav-sub-link" data-section="warmup-problem1">W.UP 1：計算の表示</a></li>
                 <li><a href="#warmup-problem2" class="nav-link nav-sub-link" data-section="warmup-problem2">W.UP 2：文字列と変数</a></li>
                 <li><a href="#warmup-problem3" class="nav-link nav-sub-link" data-section="warmup-problem3">W.UP 3：変数の更新</a></li>
-                <li><a href="#warmup-problem4" class="nav-link nav-sub-link" data-section="warmup-problem4">W.UP 4：誕生日、何曜日？</a></li>
+                <li><a href="#warmup-problem4" class="nav-link nav-sub-link" data-section="warmup-problem4">W.UP 4：好きなおかずランキング</a></li>
 
                 <li class="nav-group-title">第1部：基本の確認と応用</li>
                 <li><a href="#part1-problem1" class="nav-link nav-sub-link" data-section="part1-problem1">問題1：自己紹介メーカー</a></li>
                 <li><a href="#part1-problem2" class="nav-link nav-sub-link" data-section="part1-problem2">問題2：お菓子のお買い物計算機</a></li>
                 <li><a href="#part1-problem3" class="nav-link nav-sub-link" data-section="part1-problem3">問題3：学力判定チェック</a></li>
                 <li><a href="#part1-problem4" class="nav-link nav-sub-link" data-section="part1-problem4">問題4：単位変換マシーン</a></li>
+                <li><a href="#part1-problem5" class="nav-link nav-sub-link" data-section="part1-problem5">問題5：誕生日、何曜日？</a></li>
                 
                 <li class="nav-group-title">第2部：自由に挑戦！</li>
                 <li><a href="#part2-challenge" class="nav-link nav-sub-link" data-section="part2-challenge">自由制作 or 挑戦課題</a></li>
@@ -365,89 +370,45 @@ print("更新後のc:", c)</code></pre>
             </section>
 
             <section id="section-warmup-problem4" class="content-section hidden">
-                <h2>ウォーミングアップ4：誕生日、何曜日？</h2>
-                <p class="text-sm text-gray-600 mb-4">目標時間：10分</p>
+                <h2>ウォーミングアップ4：好きなおかずランキングを作ろう！</h2>
+                <p class="text-sm text-gray-600 mb-4">目標時間：5分</p>
                 <div class="objective-box">
-                    <strong>目標:</strong> 「ツェラーの公式」を使って、自分の誕生日が何曜日だったかを計算してみよう！`input()`関数を使って、自分で日付を入力するよ。
+                    <strong>目標:</strong> 自分の好きなおかずをリストに入れて、ランキングを作ったり、並びかえたりしてみよう！
                 </div>
-                <p>皆さんの誕生日が何曜日だったか、気になりませんか？「ツェラーの公式」という数学の公式を使うと、どんな日付でも曜日を計算することができます。</p>
-                <p>この問題では、あなたが生まれた年、月、日をプログラムに入力し、ツェラーの公式を使って曜日を計算してみましょう！</p>
-
-                <h3>ツェラーの公式について</h3>
-                <p>ツェラーの公式は、日付の曜日を求めるための数学の公式です。見た目は複雑ですが、一つずつ計算すれば大丈夫！</p>
-                <div class="formula-box">
-                    <img src="birthday.jpg" alt="ツェラーの公式" onerror="this.onerror=null;this.src='https://placehold.co/600x120/E0F2FE/0284C7?text=ツェラーの公式';">
-                </div>
-                <p class="text-sm text-gray-600 mt-2">
-                    ※ 上の画像はツェラーの公式を表しています。
-                    この演習では、画像に示されている公式の記号を使って計算します。
-                    （MathJaxは埋め込んでいますが、この公式の表示には画像を使用しています。）
-                </p>
-                <p>なお、記号の意味は以下の通りです。</p>
-                <ul class="list-disc ml-5">
-                    <li class="step-list-item"><span class="step-number">h</span><div>計算結果が示す曜日です。この数字が何曜日になるか、下のリストで確認しましょう。
-                        <ul class="list-disc ml-5 mt-2">
-                            <li>**0:** 土曜日</li>
-                            <li>**1:** 日曜日</li>
-                            <li>**2:** 月曜日</li>
-                            <li>**3:** 火曜日</li>
-                            <li>**4:** 水曜日</li>
-                            <li>**5:** 木曜日</li>
-                            <li>**6:** 金曜日</li>
-                        </ul></div>
-                    </li>
-                    <li class="step-list-item"><span class="step-number">d</span><div>計算したい日付の**「日」**の数字です。（例：1日なら `1`、25日なら `25`）</div></li>
-                    <li class="step-list-item"><span class="step-number">m</span><div>計算したい日付の**「月」**の数字です。ただし、特別なルールがあります！
-                        <ul class="list-disc ml-5 mt-2">
-                            <li>**3月から12月:** そのままの数字を使います。（例: 3月は `3`、12月は `12`）</li>
-                            <li>**1月と2月:** それぞれ `13` と `14` として扱います。このとき、**年を1年前にして**計算します。（例: 2000年1月なら、年を1999年、月を13として計算します）</li>
-                        </ul>
-                    </div></li>
-                    <li class="step-list-item"><span class="step-number">Y</span><div>計算したい**「年」の下2桁**の数字です。（例：2023年なら `23`）Pythonでは `year % 100` で求められます。</div></li>
-                    <li class="step-list-item"><span class="step-number">y</span><div>計算したい**「年」全体**の数字です。（例：2023年なら `2023`）</div></li>
-                </ul>
-                <p>※ `⌊ x ⌋` は、「**xを超えない最大の整数**」を表します。つまり、`x` の小数点以下を**切り捨てる**という意味です。Pythonでは `//` （整数割り算）で表現できます。</p>
-
-                <h3>課題:</h3>
+                <p>あなたは「給食のおかずランキング」を作ろうとしています。まずは、好きなおかずを3つ入力してリストに入れましょう。そのあと、次のことをしてみてください:</p>
                 <ol class="list-decimal ml-5">
-                    <li class="step-list-item"><span class="step-number">1</span><div>`input()`関数を使って、あなたの**生まれた年（西暦）**、**月**、**日**をそれぞれ入力し、変数に代入してください。プログラムを実行するとターミナルに質問が表示されますので、キーボードで入力してください。`input()`で受け取ったものは**文字列**なので、`int()`を使って**整数**に変換するのを忘れないでください。</div></li>
-                    <li class="step-list-item"><span class="step-number">2</span><div>もし入力された月が1月（`1`）または2月（`2`）の場合は、ツェラーの公式のルールに合わせて、**月を12増やし**（`month + 12`）、**年を1年前にする**（`year - 1`）処理を行ってください。</div></li>
-                    <li class="step-list-item"><span class="step-number">3</span><div>計算に必要な `d`, `m`, `Y`, `y` の各値を、上で説明したルールに従って変数に代入してください。</div></li>
-                    <li class="step-list-item"><span class="step-number">4</span><div>ツェラーの公式の計算式をPythonで記述し、結果を `h` という変数に代入してください。</div></li>
-                    <li class="step-list-item"><span class="step-number">5</span><div>`h` の値（0〜6）に対応する曜日をターミナルに表示してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">1</span><div>入力したおかずを表示しよう。</div></li>
+                    <li class="step-list-item"><span class="step-number">2</span><div>いちばん好きなおかずを教えて！ (1番目の要素)</div></li>
+                    <li class="step-list-item"><span class="step-number">3</span><div>ランキングを逆にして表示しよう (3→2→1位の順)</div></li>
                 </ol>
-                <span class="example-output-label">表示例（例：2000年1月1日を入力した場合）:</span>
-                <pre><code>生まれた年（西暦）を入力してください: 2000
-生まれた月を入力してください: 1
-生まれた日を入力してください: 1
-あなたの誕生日は土曜日でした！</code></pre>
+                <span class="example-output-label">実行のイメージ:</span>
+                <pre><code>好きなおかずを1つめ入力してね: からあげ
+好きなおかずを2つめ入力してね: カレー
+好きなおかずを3つめ入力してね: さばの味噌煮
+あなたの好きなおかずリスト: ['からあげ', 'カレー', 'さばの味噌煮']
+いちばん好きなおかずは: からあげ
+ランキングを逆にすると: ['さばの味噌煮', 'カレー', 'からあげ']</code></pre>
                 <span class="code-label">コード例:</span>
-                <pre class="code-example-block hidden"><button class="copy-button" onclick="copyCode(this)">コードをコピー</button><code># 1. 生まれた年、月、日を入力
-year = int(input("生まれた年（西暦）を入力してください: "))
-month = int(input("生まれた月を入力してください: "))
-day = int(input("生まれた日を入力してください: "))
+                <pre class="code-example-block hidden"><button class="copy-button" onclick="copyCode(this)">コードをコピー</button><code># おかずを入れるリスト
+okazu_list = []
 
-# 2. 1月、2月の特別な処理
-# 月が1月または2月の場合、月を+12して、年を-1する
-if month &lt;= 2:
-    month += 12
-    year -= 1
+# 3つの好きなおかずを聞いて、リストに追加
+okazu_list.append(input("好きなおかずを1つめ入力してね: "))
+okazu_list.append(input("好きなおかずを2つめ入力してね: "))
+okazu_list.append(input("好きなおかずを3つめ入力してね: "))
 
-# 3. ツェラーの公式に必要な各値を準備
-d = day          # 日
-m = month        # 月（調整済み）
-Y = year % 100   # 年の下2桁
-y = year         # 年全体
+# そのまま表示
+print("あなたの好きなおかずリスト: ", okazu_list)
 
-# 4. ツェラーの公式を計算
-# h = (d + 小数点以下切り捨て(26*(m+1)/10) + Y + 小数点以下切り捨て(Y/4) - 2*小数点以下切り捨て(y/100) + 小数点以下切り捨て(y/400)) を7で割った余り
-h = (d + (26 * (m + 1)) // 10 + Y + Y // 4 - 2 * (y // 100) + y // 400) % 7
+# いちばん好きなのは？ (1番目の要素)
+print("いちばん好きなおかずは:", okazu_list[0])
 
-# 5. 結果の表示
-days_of_week = ["土曜日", "日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日"]
-print("あなたの誕生日は" + days_of_week[h] + "でした！")</code></pre>
+# ランキングを逆にして表示
+okazu_list.reverse()
+print("ランキングを逆にすると:", okazu_list)</code></pre>
             </section>
 
+            <li class="nav-group-title">第1部：基本の確認と応用</li>
             <section id="section-part1-problem1" class="content-section hidden">
                 <h2>問題1：自己紹介メーカー</h2>
                 <p class="text-sm text-gray-600 mb-4">目標時間：15分</p>
@@ -617,9 +578,93 @@ print(str(length_cm) + "cmは" + str(length_m) + "mです。")
 print(str(weight_g) + "gは" + str(weight_kg) + "kgです。")</code></pre>
             </section>
 
+            <section id="section-part1-problem5" class="content-section hidden">
+                <h2>問題5：誕生日、何曜日？</h2>
+                <p class="text-sm text-gray-600 mb-4">目標時間：10分</p>
+                <div class="objective-box">
+                    <strong>目標:</strong> 「ツェラーの公式」を使って、自分の誕生日が何曜日だったかを計算してみよう！`input()`関数を使って、自分で日付を入力するよ。
+                </div>
+                <p>皆さんの誕生日が何曜日だったか、気になりませんか？「ツェラーの公式」という数学の公式を使うと、どんな日付でも曜日を計算することができます。</p>
+                <p>この問題では、あなたが生まれた年、月、日をプログラムに入力し、ツェラーの公式を使って曜日を計算してみましょう！</p>
+
+                <h3>ツェラーの公式について</h3>
+                <p>ツェラーの公式は、日付の曜日を求めるための数学の公式です。見た目は複雑ですが、一つずつ計算すれば大丈夫！</p>
+                <div class="formula-box">
+                    <img src="birthday.jpg" alt="ツェラーの公式" onerror="this.onerror=null;this.src='https://placehold.co/600x120/E0F2FE/0284C7?text=ツェラーの公式';">
+                </div>
+                <p class="text-sm text-gray-600 mt-2">
+                    ※ 上の画像はツェラーの公式を表しています。
+                    この演習では、画像に示されている公式の記号を使って計算します。
+                    （MathJaxは埋め込んでいますが、この公式の表示には画像を使用しています。）
+                </p>
+                <p>なお、記号の意味は以下の通りです。</p>
+                <ul class="list-disc ml-5">
+                    <li class="step-list-item"><span class="step-number">h</span><div>計算結果が示す曜日です。この数字が何曜日になるか、下のリストで確認しましょう。
+                        <ul class="list-disc ml-5 mt-2">
+                            <li><strong>0:</strong> 土曜日</li>
+                            <li><strong>1:</strong> 日曜日</li>
+                            <li><strong>2:</strong> 月曜日</li>
+                            <li><strong>3:</strong> 火曜日</li>
+                            <li><strong>4:</strong> 水曜日</li>
+                            <li><strong>5:</strong> 木曜日</li>
+                            <li><strong>6:</strong> 金曜日</li>
+                        </ul></div>
+                    </li>
+                    <li class="step-list-item"><span class="step-number">d</span><div>計算したい日付の**「日」**の数字です。（例：1日なら `1`、25日なら `25`）</div></li>
+                    <li class="step-list-item"><span class="step-number">m</span><div>計算したい日付の**「月」**の数字です。ただし、特別なルールがあります！
+                        <ul class="list-disc ml-5 mt-2">
+                            <li><strong>3月から12月:</strong> そのままの数字を使います。（例: 3月は `3`、12月は `12`）</li>
+                            <li><strong>1月と2月:</strong> それぞれ `13` と `14` として扱います。このとき、**年を1年前にして**計算します。（例: 2000年1月なら、年を1999年、月を13として計算します）</li>
+                        </ul>
+                    </div></li>
+                    <li class="step-list-item"><span class="step-number">Y</span><div>計算したい**「年」の下2桁**の数字です。（例：2023年なら `23`）Pythonでは `year % 100` で求められます。</div></li>
+                    <li class="step-list-item"><span class="step-number">y</span><div>計算したい**「年」全体**の数字です。（例：2023年なら `2023`）</div></li>
+                </ul>
+                <p>※ `⌊ x ⌋` は、**「xを超えない最大の整数」**を表します。つまり、`x` の小数点以下を**切り捨てる**という意味です。Pythonでは `//` （整数割り算）で表現できます。</p>
+
+                <h3>課題:</h3>
+                <ol class="list-decimal ml-5">
+                    <li class="step-list-item"><span class="step-number">1</span><div>`input()`関数を使って、あなたの**生まれた年（西暦）**、**月**、**日**をそれぞれ入力し、変数に代入してください。プログラムを実行するとターミナルに質問が表示されますので、キーボードで入力してください。`input()`で受け取ったものは**文字列**なので、`int()`を使って**整数**に変換するのを忘れないでください。</div></li>
+                    <li class="step-list-item"><span class="step-number">2</span><div>もし入力された月が1月（`1`）または2月（`2`）の場合は、ツェラーの公式のルールに合わせて、**月を12増やし**（`month + 12`）、**年を1年前にする**（`year - 1`）処理を行ってください。</div></li>
+                    <li class="step-list-item"><span class="step-number">3</span><div>計算に必要な `d`, `m`, `Y`, `y` の各値を、上で説明したルールに従って変数に代入してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">4</span><div>ツェラーの公式の計算式をPythonで記述し、結果を `h` という変数に代入してください。</div></li>
+                    <li class="step-list-item"><span class="step-number">5</span><div>`h` の値（0〜6）に対応する曜日をターミナルに表示してください。</div></li>
+                </ol>
+                <span class="example-output-label">表示例（例：2000年1月1日を入力した場合）:</span>
+                <pre><code>生まれた年（西暦）を入力してください: 2000
+生まれた月を入力してください: 1
+生まれた日を入力してください: 1
+あなたの誕生日は土曜日でした！</code></pre>
+                <span class="code-label">コード例:</span>
+                <pre class="code-example-block hidden"><button class="copy-button" onclick="copyCode(this)">コードをコピー</button><code># 1. 生まれた年、月、日を入力
+year = int(input("生まれた年（西暦）を入力してください: "))
+month = int(input("生まれた月を入力してください: "))
+day = int(input("生まれた日を入力してください: "))
+
+# 2. 1月、2月の特別な処理
+# 月が1月または2月の場合、月を+12して、年を-1する
+if month &lt;= 2:
+    month += 12
+    year -= 1
+
+# 3. ツェラーの公式に必要な各値を準備
+d = day          # 日
+m = month        # 月（調整済み）
+Y = year % 100   # 年の下2桁
+y = year         # 年全体
+
+# 4. ツェラーの公式を計算
+# h = (d + 小数点以下切り捨て(26*(m+1)/10) + Y + 小数点以下切り捨て(Y/4) - 2*小数点以下切り捨て(y/100) + 小数点以下切り捨て(y/400)) を7で割った余り
+h = (d + (26 * (m + 1)) // 10 + Y + Y // 4 - 2 * (y // 100) + y // 400) % 7
+
+# 5. 結果の表示
+days_of_week = ["土曜日", "日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日"]
+print("あなたの誕生日は" + days_of_week[h] + "でした！")</code></pre>
+            </section>
+
             <section id="section-part2-challenge" class="content-section hidden">
                 <h2>第2部：自由に挑戦！プログラミングタイム</h2>
-                <p class="text-sm text-gray-600 mb-4">目標時間：45分</p>
+                <p class="text-sm text-gray-600 mb-4">目標時間：15分</p>
                 <div class="objective-box">
                     <strong>目標:</strong> これまでの知識を組み合わせて、自分でプログラムを考えて作ってみよう！
                 </div>
@@ -676,12 +721,24 @@ print(total_score >= 1000)</code></pre>
 
             <section id="section-matome" class="content-section hidden">
                 <h2>まとめと振り返り</h2>
-                <p class="text-sm text-gray-600 mb-4">目標時間：15分</p>
+                <p class="text-sm text-gray-600 mb-4">目標時間：10分</p>
+                <p>今日の演習、お疲れ様でした！今回の演習では、Pythonプログラミングの基本的な文法を使って、様々な課題を解決する練習をしましたね。</p>
+                <p>特に、以下の文法や考え方が重要でした。これらをしっかり理解できているか確認してみましょう！</p>
                 <ul class="list-disc ml-5">
-                    <li class="step-list-item"><div>今日作ったプログラムを発表してみよう！（希望者）</div></li>
-                    <li class="step-list-item"><div>難しかった問題や、新しく発見したことなどをみんなで共有しよう。</div></li>
-                    <li class="step-list-item"><div>もっと知りたいことや、次の授業で学びたいことなどがあれば、先生に教えてね！</div></li>
+                    <li class="step-list-item"><div><strong>変数:</strong> データを一時的に保存する「箱」のようなものです。名前をつけて、数字や文字などを入れて使いましたね。</div></li>
+                    <li class="step-list-item"><div><strong>データ型:</strong> 数字（整数 `int`、小数点付き `float`）や文字（`str`）など、データの種類のことです。計算ができるのは数字だけ、文字と数字をつなげるには変換が必要、ということを学びました。</div></li>
+                    <li class="step-list-item"><div><strong>print()関数:</strong> プログラムの実行結果や、変数の中身をターミナルに表示するために使いました。</div></li>
+                    <li class="step-list-item"><div><strong>型変換 (int(), str()):</strong> `input()`で受け取った文字を数字にしたり、数字を文字にしたりするときに使いました。特に `input()` の結果は常に文字列なので、計算には `int()` や `float()` で変換が必要でしたね。</div></li>
+                    <li class="step-list-item"><div><strong>四則演算子 (+, -, *, /, //, %):</strong> 足し算、引き算、掛け算、割り算だけでなく、割り算の「商 (`//`)」や「余り (`%`)」も計算できることを確認しました。</div></li>
+                    <li class="step-list-item"><div><strong>比較演算子 (&gt;, &lt;, ==, &gt;=, &lt;=):</strong> 2つの値を比べて、大きいか、小さいか、等しいかなどを判定し、その結果が `True`（正しい）か `False`（間違っている）で返ってくることを学びました。</div></li>
+                    <li class="step-list-item"><div><strong>論理演算子 (and, or):</strong> 複数の「正しい/間違っている」という条件を組み合わせるために使いました。例えば、「AもBも正しい」なら `and`、「AかBのどちらかが正しい」なら `or` です。</div></li>
+                    <li class="step-list-item"><div><strong>リスト:</strong> 複数のデータを順番にまとめて入れておくことができる「リスト」という便利な入れ物を使いました。リストの中の特定のデータを取り出したり、順番を入れ替えたりする練習もしましたね。</div></li>
+                    <li class="step-list-item"><div><strong>input()関数:</strong> プログラムの実行中に、キーボードから文字を入力して、その値をプログラムで使うことができるようにしました。これで、より対話的なプログラムが作れるようになりましたね。</div></li>
                 </ul>
+                <p class="mt-4">これらの文法を組み合わせることで、簡単な計算だけでなく、情報の整理や判定、さらには曜日計算のような少し複雑な課題にも挑戦できました。</p>
+                <p class="mt-4">今日作ったプログラムを発表してみよう！（希望者）</p>
+                <p>難しかった問題や、新しく発見したことなどをみんなで共有しよう。</p>
+                <p>もっと知りたいことや、次の授業で学びたいことなどがあれば、先生に教えてね！</p>
                 <p class="mt-4">これで今日の演習は終わりです。よく頑張りました！Pythonプログラミングの楽しさを少しでも感じられたでしょうか？これからも色々なプログラム作りに挑戦してみてくださいね！</p>
             </section>
         </main>
